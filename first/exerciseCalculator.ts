@@ -45,4 +45,17 @@ function calculateExercises(
   return result;
 }
 
-console.log(calculateExercises([1, 3, 5, 7, 6, 0, 2, 2], 3));
+try {
+  const dailyExerHrs: number[] = process.argv
+    .slice(2, process.argv.length - 1)
+    .map((value) => Number(value))
+    .filter((number) => Number.isNaN(number) === false);
+  console.log(dailyExerHrs);
+  const dailyTarget: number = Number(process.argv[process.argv.length - 1]);
+  if (process.argv.length < 4) {
+    throw "Give at least two arguments. All arguments must be numbers.";
+  }
+  console.log(calculateExercises(dailyExerHrs, dailyTarget));
+} catch (error) {
+  console.log("Error with arguments: " + error);
+}
