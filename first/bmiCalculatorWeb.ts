@@ -1,4 +1,4 @@
-function calculateBmiWeb(height: number, weight: number): {} {
+function calculateBmiWeb(height: number, weight: number): object {
   if (
     Number.isNaN(height) ||
     typeof height !== "number" ||
