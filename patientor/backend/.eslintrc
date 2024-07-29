@@ -35,5 +35,10 @@
     },
     "ignorePatterns": [
         "**/build/*"
+    ],
+    "workingDirectories": [
+        {
+            "mode": "auto"
+        }
     ]
 }
