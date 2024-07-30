@@ -2,6 +2,7 @@ import express from "express";
 import diagnosisRouter from "./routes/diagnoses";
 import patientRouter from "./routes/patients";
 
+//eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const cors = require("cors");
 
 const app = express();
