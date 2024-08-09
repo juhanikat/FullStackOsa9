@@ -19,9 +19,9 @@ const DiaryEntries = (props: DiaryProps) => {
       {diaryEntries.map((entry) => (
         <div>
           <h2>{entry.date}</h2>
-          <p>{entry.weather}</p>
-          <p>{entry.visibility}</p>
-          <p>{entry.comment}</p>
+          <p>Weather: {entry.weather}</p>
+          <p>Visibility: {entry.visibility}</p>
+          <p>Comment: {entry.comment}</p>
         </div>
       ))}
     </>
@@ -34,6 +34,7 @@ function App() {
   const [weather, setWeather] = useState("");
   const [visibility, setVisibility] = useState("");
   const [comment, setComment] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     axios
@@ -51,18 +52,37 @@ function App() {
       visibility: visibility,
       comment: comment,
     };
-    axios.post<DiaryEntry>("http://localhost:3000/api/diaries", newDiaryEntry);
-    setDiaryEntries(diaryEntries.concat(newDiaryEntry));
+    axios
+      .post<DiaryEntry>("http://localhost:3000/api/diaries", newDiaryEntry)
+      .then(() => {
+        setDiaryEntries(diaryEntries.concat(newDiaryEntry));
+      })
+      .catch((error) => {
+        if (axios.isAxiosError(error) || "response" in error) {
+          setErrorMsg(error.response.data);
+        }
+      });
   };
+
+  let errorMsgDiv = (
+    <div>
+      <p>{errorMsg}</p>
+    </div>
+  );
+  if (errorMsg.length === 0) {
+    errorMsgDiv = <></>;
+  }
 
   return (
     <>
       <h1>Flight Diary Entries</h1>
+      {errorMsgDiv}
       <div>
         <form onSubmit={createDiaryEntry}>
           <label>Date</label>
           <br></br>
           <input
+            type="date"
             value={date}
             onChange={(event) => setDate(event.target.value)}
           />
@@ -70,16 +90,71 @@ function App() {
           <label>Weather</label>
           <br></br>
           <input
-            value={weather}
-            onChange={(event) => setWeather(event.target.value)}
+            id="sunnyButton"
+            type="radio"
+            name="weatherSelection"
+            onChange={() => setWeather("sunny")}
           />
+          <label htmlFor="sunnyButton">Sunny</label>
+          <input
+            id="rainyButton"
+            type="radio"
+            name="weatherSelection"
+            onChange={() => setWeather("rainy")}
+          />
+          <label htmlFor="rainyButton">Rainy</label>
+          <input
+            id="cloudyButton"
+            type="radio"
+            name="weatherSelection"
+            onChange={() => setWeather("cloudy")}
+          />
+          <label htmlFor="cloudyButton">Cloudy</label>
+          <input
+            id="stormyButton"
+            type="radio"
+            name="weatherSelection"
+            onChange={() => setWeather("stormy")}
+          />
+          <label htmlFor="stormyButton">Stormy</label>
+          <input
+            id="windyButton"
+            type="radio"
+            name="weatherSelection"
+            onChange={() => setWeather("windy")}
+          />
+          <label htmlFor="windyButton">Windy</label>
           <br></br>
           <label>Visibility</label>
           <br></br>
           <input
-            value={visibility}
-            onChange={(event) => setVisibility(event.target.value)}
+            id="greatButton"
+            type="radio"
+            name="visibilitySelection"
+            onChange={() => setVisibility("great")}
           />
+          <label htmlFor="greatButton">Great</label>
+          <input
+            id="goodButton"
+            type="radio"
+            name="visibilitySelection"
+            onChange={() => setVisibility("good")}
+          />
+          <label htmlFor="goodButton">Good</label>
+          <input
+            id="okButton"
+            type="radio"
+            name="visibilitySelection"
+            onChange={() => setVisibility("ok")}
+          />
+          <label htmlFor="okButton">OK</label>
+          <input
+            id="poorButton"
+            type="radio"
+            name="visibilitySelection"
+            onChange={() => setVisibility("poor")}
+          />
+          <label htmlFor="poorButton">Poor</label>
           <br></br>
           <label>Comment</label>
           <br></br>
