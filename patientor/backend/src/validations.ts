@@ -5,7 +5,6 @@ const isString = (text: unknown): text is string => {
 };
 
 const isDate = (date: string): boolean => {
-  console.log(Date.parse(date));
   return Boolean(Date.parse(date));
 };
 
