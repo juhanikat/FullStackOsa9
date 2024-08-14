@@ -1,3 +1,16 @@
+export interface HealthCheckEntryProps {
+  entry: HealthCheckEntry;
+  diagnoses: Diagnosis[];
+}
+export interface HospitalEntryProps {
+  entry: HospitalEntry;
+  diagnoses: Diagnosis[];
+}
+export interface OccupationalHealthcareEntryProps {
+  entry: OccupationalHealthcareEntry;
+  diagnoses: Diagnosis[];
+}
+
 export interface Diagnosis {
   code: string;
   name: string;
@@ -35,7 +48,7 @@ export enum HealthCheckRating {
   "CriticalRisk" = 3,
 }
 
-interface HospitalEntry extends BaseEntry {
+export interface HospitalEntry extends BaseEntry {
   type: "Hospital";
   discharge: {
     date: string;
