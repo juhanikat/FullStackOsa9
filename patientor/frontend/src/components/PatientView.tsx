@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Patient } from "../types";
+import { Patient, Entry } from "../types";
 import patientService from "../services/patients";
 import { useEffect, useState } from "react";
 
@@ -22,6 +22,17 @@ const PatientView = () => {
         <p>{patient.gender}</p>
         <p>ssn: {patient.ssn}</p>
         <p>occupation: {patient.occupation}</p>
+        <h3>Entries</h3>
+        <div>
+          {patient.entries.map((entry: Entry) => (
+            <div>
+              <p>{entry.date}</p>
+              <p>{entry.description}</p>
+              {entry.diagnosisCodes &&
+                entry.diagnosisCodes.map((code) => <p>{code}</p>)}
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
