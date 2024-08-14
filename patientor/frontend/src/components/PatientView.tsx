@@ -1,10 +1,12 @@
 import { useParams } from "react-router-dom";
-import { Patient, Entry } from "../types";
+import { Patient, Entry, Diagnosis } from "../types";
 import patientService from "../services/patients";
+import diagnosisService from "../services/diagnoses";
 import { useEffect, useState } from "react";
 
 const PatientView = () => {
   const [patient, setPatient] = useState<Patient>();
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>();
   const id = useParams().id as string;
 
   useEffect(() => {
@@ -12,7 +14,12 @@ const PatientView = () => {
       const correctPatient = await patientService.getOne(id);
       setPatient(correctPatient);
     };
+    const getDiagnoses = async () => {
+      const diagnoses: Diagnosis[] = await diagnosisService.getAll();
+      setDiagnoses(diagnoses);
+    };
     getPatient();
+    getDiagnoses();
   }, []);
 
   if (patient !== undefined) {
@@ -26,10 +33,14 @@ const PatientView = () => {
         <div>
           {patient.entries.map((entry: Entry) => (
             <div>
-              <p>{entry.date}</p>
+              <h4>{entry.date}</h4>
               <p>{entry.description}</p>
               {entry.diagnosisCodes &&
-                entry.diagnosisCodes.map((code) => <p>{code}</p>)}
+                entry.diagnosisCodes.map((code) => (
+                  <p>
+                    {code} {diagnoses?.find((obj) => obj.code === code)?.name}
+                  </p>
+                ))}
             </div>
           ))}
         </div>

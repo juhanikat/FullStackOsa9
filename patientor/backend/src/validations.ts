@@ -1,4 +1,4 @@
-import { Gender } from "./types";
+import { Gender, Entry } from "./types";
 
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -53,6 +53,25 @@ const parseOccupation = (occupation: unknown): string => {
   return occupation;
 };
 
+const parseEntries = (entries: unknown): Entry[] => {
+  if (!Array.isArray(entries)) {
+    throw new Error("Incorrect entries array");
+  }
+  entries.forEach((entry) => {
+    if (typeof entry !== "object" || !("type" in entry) || !isString(entry.type)) {
+      throw new Error("Incorrect or missing type field in one or more entries");
+    }
+    if (
+      !["Hospital", "HealthCheck", "OccupationalHealthcare"].includes(
+        entry.type as string
+      )
+    ) {
+      throw new Error("Incorrect type field value in one or more entries");
+    }
+  });
+  return entries as Entry[];
+};
+
 export {
   isString,
   isGender,
@@ -61,4 +80,5 @@ export {
   parseSsn,
   parseGender,
   parseOccupation,
+  parseEntries,
 };
