@@ -1,5 +1,6 @@
 import { HealthCheckEntryProps } from "../types";
 import { Box } from "@mui/material";
+import { v4 as uuid } from "uuid";
 
 const HealthCheckEntry = (props: HealthCheckEntryProps) => {
   const entry = props.entry;
@@ -18,7 +19,7 @@ const HealthCheckEntry = (props: HealthCheckEntryProps) => {
       <p>Diagnosed by {entry.specialist}</p>
       {entry.diagnosisCodes && <h4>Diagnoses</h4>}
       {entry.diagnosisCodes?.map((code) => (
-        <p>
+        <p key={uuid()}>
           {code} {diagnoses.find((obj) => obj.code === code)?.name}
         </p>
       ))}

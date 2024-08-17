@@ -131,11 +131,16 @@ const toNewPatient = (object: unknown): Patient => {
       "dateOfBirth" in object &&
       "ssn" in object &&
       "gender" in object &&
-      "occupation" in object &&
-      "entries" in object
+      "occupation" in object
     )
   ) {
     throw new Error("One or more fields are missing from patient");
+  }
+  let entries;
+  if (!("entries" in object)) {
+    entries = parseEntries([]);
+  } else {
+    entries = parseEntries(object.entries);
   }
   const newPatient: Patient = {
     id: uuid(),
@@ -144,7 +149,7 @@ const toNewPatient = (object: unknown): Patient => {
     ssn: parseSsn(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseOccupation(object.occupation),
-    entries: parseEntries(object.entries),
+    entries: entries,
   };
   return newPatient;
 };

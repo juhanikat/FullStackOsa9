@@ -7,6 +7,7 @@ import {
   HealthCheckEntry,
   HealthCheckRating,
 } from "./types";
+import { v1 as uuid } from "uuid";
 
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -102,7 +103,7 @@ const parseHealthCheckEntry = (entry: Entry): HealthCheckEntry => {
   return entry;
 };
 
-const parseEntry = (entry: unknown): Entry => {
+const toNewEntry = (entry: unknown): Entry => {
   if (typeof entry !== "object" || entry == null) {
     throw new Error("Entry is not an object");
   }
@@ -122,6 +123,7 @@ const parseEntry = (entry: unknown): Entry => {
     throw new Error("Incorrect or missing type field in entry");
   }
   const parsedEntry = entry as Entry;
+  parsedEntry.id = uuid();
 
   if (!("diagnosisCodes" in entry)) {
     parsedEntry.diagnosisCodes = [] as Array<Diagnosis["code"]>;
@@ -136,7 +138,6 @@ const parseEntry = (entry: unknown): Entry => {
     default:
       throw new Error(`Invalid type: ${entry.type}`);
   }
-  return parsedEntry;
 };
 const parseEntries = (entries: unknown): Entry[] => {
   if (!Array.isArray(entries)) {
@@ -169,6 +170,6 @@ export {
   parseSsn,
   parseGender,
   parseOccupation,
-  parseEntry,
+  toNewEntry,
   parseEntries,
 };

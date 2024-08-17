@@ -6,7 +6,8 @@ import {
   addEntryToPatient,
 } from "../services/patientService";
 import { NewEntry, NewPatient } from "../types";
-import { parseEntry } from "../validations";
+import { toNewEntry } from "../validations";
+import { toNewPatient } from "../data/patients";
 
 const router = express.Router();
 
@@ -16,7 +17,8 @@ router.get("/", (_req, res) => {
 
 router.post("/", (req, res) => {
   try {
-    const addedPatient = addPatient(req.body as NewPatient);
+    const newPatient = toNewPatient(req.body as NewPatient);
+    const addedPatient = addPatient(newPatient);
     res.json(addedPatient);
   } catch (error: unknown) {
     let errorMessage = "Something went wrong!";
@@ -44,7 +46,7 @@ router.post("/:id/entries", (req, res) => {
     return;
   }
   try {
-    const newEntry = parseEntry(req.body as NewEntry);
+    const newEntry = toNewEntry(req.body as NewEntry);
     addEntryToPatient(patient, newEntry);
     res.json(newEntry);
   } catch (error: unknown) {

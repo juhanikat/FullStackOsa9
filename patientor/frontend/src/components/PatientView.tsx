@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import HealthCheckEntry from "./HealthCheckEntry";
 import HospitalEntry from "./HospitalEntry";
 import OccupationalHealthcareEntry from "./OccupationalHealthcareEntry";
+import { v4 as uuid } from "uuid";
 
 const assertNever = (value: never): never => {
   throw new Error(`Unhandled entry: ${value}`);
@@ -52,14 +53,14 @@ const PatientView = () => {
     return (
       <div>
         <h2>{patient.name}</h2>
-        <p>{patient.gender}</p>
-        <p>ssn: {patient.ssn}</p>
-        <p>occupation: {patient.occupation}</p>
+        <p>Sex: {patient.gender}</p>
+        <p>SSN: {patient.ssn}</p>
+        <p>Occupation: {patient.occupation}</p>
         <h3>Entries</h3>
         <div>
-          {patient.entries.map((entry: Entry) =>
-            getCorrectEntryType(entry, diagnoses)
-          )}
+          {patient.entries.map((entry: Entry) => (
+            <div key={uuid()}>{getCorrectEntryType(entry, diagnoses)}</div>
+          ))}
         </div>
       </div>
     );
