@@ -1,33 +1,34 @@
-import { useState, SyntheticEvent, ChangeEvent } from "react";
+import { useState, SyntheticEvent, useEffect } from "react";
 
-import { TextField } from "@mui/material";
+import { TextField, Input, Select, MenuItem, Button } from "@mui/material";
 
-import { HealthCheckRating, EntryFormValues } from "../../types";
+import {
+  HealthCheckRating,
+  HealthCheckEntryFormValues,
+  Diagnosis,
+} from "../../types";
+import diagnosisService from "../../services/diagnoses";
 
 interface Props {
-  onSubmit: (values: EntryFormValues) => void;
+  onSubmit: (values: HealthCheckEntryFormValues) => void;
 }
 
-// Only healthcheckratingentry atm! check EntryFormValues type when updating
-const NewEntryForm = ({ onSubmit }: Props) => {
+const NewHealthCheckEntryForm = ({ onSubmit }: Props) => {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [specialist, setSpecialist] = useState("");
   const [healthCheckRating, setHealthCheckRating] =
     useState<HealthCheckRating>(0);
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>();
   const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([""]);
 
-  const onDiagnosisCodesChange = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    if (typeof event.target.value === "string") {
-      const value = event.target.value;
-      const codes = value.split(",");
-      const trimmedCodes = codes.map((code) => code.trim());
-      if (trimmedCodes) {
-        setDiagnosisCodes(trimmedCodes);
-      }
-    }
-  };
+  useEffect(() => {
+    const getDiagnoses = async () => {
+      const diagnoses: Diagnosis[] = await diagnosisService.getAll();
+      setDiagnoses(diagnoses);
+    };
+    getDiagnoses();
+  }, []);
 
   const addEntry = (event: SyntheticEvent) => {
     event.preventDefault();
@@ -40,6 +41,7 @@ const NewEntryForm = ({ onSubmit }: Props) => {
       healthCheckRating,
       diagnosisCodes,
     });
+    setDiagnosisCodes([]);
   };
 
   return (
@@ -51,15 +53,14 @@ const NewEntryForm = ({ onSubmit }: Props) => {
           value={description}
           onChange={({ target }) => setDescription(target.value)}
         />
-        <TextField
-          label="Date"
-          fullWidth
-          value={date}
+        <p>Date</p>
+        <Input
+          id="date"
+          type="date"
           onChange={({ target }) => setDate(target.value)}
         />
         <TextField
           label="Specialist"
-          placeholder="YYYY-MM-DD"
           fullWidth
           value={specialist}
           onChange={({ target }) => setSpecialist(target.value)}
@@ -91,17 +92,28 @@ const NewEntryForm = ({ onSubmit }: Props) => {
             onChange={() => setHealthCheckRating(3)}
           />
         </div>
-
-        <TextField
-          label="Diagnosis Codes"
-          fullWidth
+        <p>Diagnosis Codes</p>
+        <Select
+          multiple
           value={diagnosisCodes}
-          onChange={onDiagnosisCodesChange}
-        />
-        <button type="submit">Add Entry</button>
+          onChange={({ target }) =>
+            setDiagnosisCodes(diagnosisCodes.concat(target.value))
+          }
+        >
+          {diagnoses &&
+            diagnoses.map((d) => (
+              <MenuItem key={d.code} value={d.code}>
+                {d.name}
+              </MenuItem>
+            ))}
+        </Select>
+        <br></br>
+        <Button variant="contained" type="submit">
+          Add Entry
+        </Button>
       </form>
     </div>
   );
 };
 
-export default NewEntryForm;
+export default NewHealthCheckEntryForm;

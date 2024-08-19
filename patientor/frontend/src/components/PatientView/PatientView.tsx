@@ -1,5 +1,11 @@
 import { useParams } from "react-router-dom";
-import { Patient, Entry, Diagnosis, EntryFormValues } from "../../types";
+import {
+  Patient,
+  Entry,
+  Diagnosis,
+  EntryFormValues,
+  EntryType,
+} from "../../types";
 import patientService from "../../services/patients";
 import diagnosisService from "../../services/diagnoses";
 import { useEffect, useState } from "react";
@@ -8,7 +14,10 @@ import HospitalEntry from "../HospitalEntry";
 import OccupationalHealthcareEntry from "../OccupationalHealthcareEntry";
 import { v4 as uuid } from "uuid";
 import axios from "axios";
-import NewEntryForm from "./NewEntryForm";
+import NewHospitalEntryForm from "../NewEntryForms/NewHospitalEntryForm";
+import NewHealthCheckEntryForm from "../NewEntryForms/NewHealthCheckEntryForm";
+import NewOccupationalHealthcareEntryForm from "../NewEntryForms/NewOccupationalHealthcareEntryForm";
+import { Alert } from "@mui/material";
 
 const assertNever = (value: never): never => {
   throw new Error(`Unhandled entry: ${value}`);
@@ -34,6 +43,7 @@ const PatientView = () => {
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>();
   const [entries, setEntries] = useState<Entry[]>([]);
   const [error, setError] = useState<string>();
+  const [newEntryFormType, setnewEntryFormType] = useState<EntryType>(0);
 
   const id = useParams().id as string;
 
@@ -55,6 +65,7 @@ const PatientView = () => {
     try {
       const entry = await patientService.addEntry(id, values);
       setEntries(entries.concat(entry));
+      setError("");
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
         if (e?.response?.data && typeof e?.response?.data === "string") {
@@ -84,8 +95,36 @@ const PatientView = () => {
 
   return (
     <div>
-      <p>{error}</p>
-      <NewEntryForm onSubmit={submitnewEntry} />
+      {error && <Alert severity="error">{error}</Alert>}
+      <div>
+        New Hospital Entry
+        <input
+          type="radio"
+          name="entryType"
+          onChange={() => setnewEntryFormType(0)}
+        />
+        New Occupational Healthcare Entry
+        <input
+          type="radio"
+          name="entryType"
+          onChange={() => setnewEntryFormType(1)}
+        />
+        New Health Check Entry
+        <input
+          type="radio"
+          name="entryType"
+          onChange={() => setnewEntryFormType(2)}
+        />
+      </div>
+      {newEntryFormType === 0 && (
+        <NewHospitalEntryForm onSubmit={submitnewEntry} />
+      )}
+      {newEntryFormType === 1 && (
+        <NewOccupationalHealthcareEntryForm onSubmit={submitnewEntry} />
+      )}
+      {newEntryFormType === 2 && (
+        <NewHealthCheckEntryForm onSubmit={submitnewEntry} />
+      )}
       <h2>{patient.name}</h2>
       <p>Sex: {patient.gender}</p>
       <p>SSN: {patient.ssn}</p>
