@@ -10,15 +10,13 @@ import {
 import { v1 as uuid } from "uuid";
 
 const isString = (text: unknown): text is string => {
-  return typeof text === "string" || text instanceof String;
+  return (
+    (typeof text === "string" || text instanceof String) && text.length > 0
+  );
 };
 
 const isHealthCheckRating = (rating: unknown) => {
-  console.log(Object.values(HealthCheckRating));
-  return (
-    isString(rating) &&
-    Object.values(HealthCheckRating).includes(Number(rating))
-  );
+  return Object.values(HealthCheckRating).includes(Number(rating));
 };
 
 const isDate = (date: string): boolean => {
@@ -113,7 +111,7 @@ const toNewEntry = (entry: unknown): Entry => {
   if (!("description" in entry) || !isString(entry.description)) {
     throw new Error("Incorrect or missing description field in entry");
   }
-  if (!("date" in entry) || !isString(entry.date)) {
+  if (!("date" in entry) || !isString(entry.date) || !isDate(entry.date)) {
     throw new Error("Incorrect or missing date field in entry");
   }
   if (!("specialist" in entry) || !isString(entry.specialist)) {
