@@ -17,7 +17,7 @@ import axios from "axios";
 import NewHospitalEntryForm from "../NewEntryForms/NewHospitalEntryForm";
 import NewHealthCheckEntryForm from "../NewEntryForms/NewHealthCheckEntryForm";
 import NewOccupationalHealthcareEntryForm from "../NewEntryForms/NewOccupationalHealthcareEntryForm";
-import { Alert } from "@mui/material";
+import { Alert, Select, MenuItem, Box } from "@mui/material";
 
 const assertNever = (value: never): never => {
   throw new Error(`Unhandled entry: ${value}`);
@@ -96,35 +96,38 @@ const PatientView = () => {
   return (
     <div>
       {error && <Alert severity="error">{error}</Alert>}
-      <div>
-        New Hospital Entry
-        <input
-          type="radio"
-          name="entryType"
-          onChange={() => setnewEntryFormType(0)}
-        />
-        New Occupational Healthcare Entry
-        <input
-          type="radio"
-          name="entryType"
-          onChange={() => setnewEntryFormType(1)}
-        />
-        New Health Check Entry
-        <input
-          type="radio"
-          name="entryType"
-          onChange={() => setnewEntryFormType(2)}
-        />
-      </div>
-      {newEntryFormType === 0 && (
-        <NewHospitalEntryForm onSubmit={submitnewEntry} />
-      )}
-      {newEntryFormType === 1 && (
-        <NewOccupationalHealthcareEntryForm onSubmit={submitnewEntry} />
-      )}
-      {newEntryFormType === 2 && (
-        <NewHealthCheckEntryForm onSubmit={submitnewEntry} />
-      )}
+      <h2>New Entry</h2>
+      <Box
+        sx={{
+          border: "2px solid #000", // Set the border size and color
+          borderRadius: "8px", // Optional: Add rounded corners
+          padding: "16px", // Optional: Add padding inside the border
+        }}
+      >
+        <Select
+          value={newEntryFormType}
+          onChange={({ target }) => setnewEntryFormType(target.value as number)}
+        >
+          <MenuItem selected={newEntryFormType === 0} key={0} value={0}>
+            Hospital Entry
+          </MenuItem>
+          <MenuItem selected={newEntryFormType === 1} key={1} value={1}>
+            Occupational Healthcare Entry
+          </MenuItem>
+          <MenuItem selected={newEntryFormType === 2} key={2} value={2}>
+            Health Check Entry
+          </MenuItem>
+        </Select>
+        {newEntryFormType === 0 && (
+          <NewHospitalEntryForm onSubmit={submitnewEntry} />
+        )}
+        {newEntryFormType === 1 && (
+          <NewOccupationalHealthcareEntryForm onSubmit={submitnewEntry} />
+        )}
+        {newEntryFormType === 2 && (
+          <NewHealthCheckEntryForm onSubmit={submitnewEntry} />
+        )}
+      </Box>
       <h2>{patient.name}</h2>
       <p>Sex: {patient.gender}</p>
       <p>SSN: {patient.ssn}</p>

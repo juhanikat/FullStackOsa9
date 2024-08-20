@@ -94,7 +94,7 @@ const NewOccupationalHealthcareEntryForm = ({ onSubmit }: Props) => {
               </MenuItem>
             ))}
         </Select>
-        <br></br>F
+        <br></br>
         <Button variant="contained" type="submit">
           Add Entry
         </Button>

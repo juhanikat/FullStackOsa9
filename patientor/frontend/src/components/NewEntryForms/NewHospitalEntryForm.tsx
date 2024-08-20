@@ -83,7 +83,11 @@ const NewHospitalEntryForm = ({ onSubmit }: Props) => {
           }
         >
           {diagnoses &&
-            diagnoses.map((d) => <MenuItem key={d.code} value={d.code}>{d.name}</MenuItem>)}
+            diagnoses.map((d) => (
+              <MenuItem key={d.code} value={d.code}>
+                {d.name}
+              </MenuItem>
+            ))}
         </Select>
         <br></br>
         <Button variant="contained" type="submit">

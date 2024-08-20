@@ -1,6 +1,13 @@
 import { useState, SyntheticEvent, useEffect } from "react";
 
-import { TextField, Input, Select, MenuItem, Button } from "@mui/material";
+import {
+  TextField,
+  Input,
+  Select,
+  MenuItem,
+  Button,
+  Radio,
+} from "@mui/material";
 
 import {
   HealthCheckRating,
@@ -65,33 +72,34 @@ const NewHealthCheckEntryForm = ({ onSubmit }: Props) => {
           value={specialist}
           onChange={({ target }) => setSpecialist(target.value)}
         />
-        <div>
-          Healthy
-          <input
-            type="radio"
-            name="rating"
-            checked
-            onChange={() => setHealthCheckRating(0)}
-          />
-          Low Risk
-          <input
-            type="radio"
-            name="rating"
-            onChange={() => setHealthCheckRating(1)}
-          />
-          High Risk
-          <input
-            type="radio"
-            name="rating"
-            onChange={() => setHealthCheckRating(2)}
-          />
-          Critical Risk
-          <input
-            type="radio"
-            name="rating"
-            onChange={() => setHealthCheckRating(3)}
-          />
-        </div>
+        <label>Healthy</label>
+        <Radio
+          checked={healthCheckRating === 0}
+          onChange={() => setHealthCheckRating(0)}
+          value={0}
+          name="rating-buttons"
+        />
+        <label>Low Risk</label>
+        <Radio
+          checked={healthCheckRating === 1}
+          onChange={() => setHealthCheckRating(1)}
+          value={1}
+          name="rating-buttons"
+        />
+        <label>High Risk</label>
+        <Radio
+          checked={healthCheckRating === 2}
+          onChange={() => setHealthCheckRating(2)}
+          value={2}
+          name="rating-buttons"
+        />
+        <label>Critical Risk</label>
+        <Radio
+          checked={healthCheckRating === 3}
+          onChange={() => setHealthCheckRating(3)}
+          value={3}
+          name="rating-buttons"
+        />
         <p>Diagnosis Codes</p>
         <Select
           multiple
